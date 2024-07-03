@@ -14,23 +14,6 @@ const textStyle = {
   lineHeight: "1",
   margin: "0",
 };
-export default function StarRating({ maxRating = 5 }) {
-  const [rating, setRating] = useState(0);
-
-  function handleOnClick(e) {
-    console.log(e.target.value);
-  }
-  return (
-    <div style={containerStyle}>
-      <div style={starContainerStyle}>
-        {Array.from({ length: maxRating }, (_, i) => (
-          <Star key={i} handleOnClick={handleOnClick} />
-        ))}
-      </div>
-      <p style={textStyle}>{rating || ""}</p>
-    </div>
-  );
-}
 
 const starSyle = {
   width: "48px",
@@ -38,9 +21,29 @@ const starSyle = {
   display: "block",
   cursor: "pointer",
 };
-function Star(handleOnClick) {
+
+export default function StarRating({ maxRating }) {
+  const [rating, setRating] = useState(0);
+
+  function handleOnRate() {
+    console.log("e.target.value");
+  }
+
   return (
-    <span role="button" style={starSyle} onClick={handleOnClick}>
+    <div style={containerStyle}>
+      <div style={starContainerStyle}>
+        {Array.from({ length: maxRating }, (_, i) => (
+          <Star onRate={handleOnRate} key={i} />
+        ))}
+      </div>
+      <p style={textStyle}>{rating || ""}</p>
+    </div>
+  );
+}
+
+function Star({ onRate }) {
+  return (
+    <span role="button" style={starSyle} onClick={onRate}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
