@@ -25,15 +25,15 @@ const starSyle = {
 export default function StarRating({ maxRating }) {
   const [rating, setRating] = useState(0);
 
-  function handleOnRate() {
-    console.log("e.target.value");
+  function handleRating(rating) {
+    setRating(rating);
   }
 
   return (
     <div style={containerStyle}>
       <div style={starContainerStyle}>
         {Array.from({ length: maxRating }, (_, i) => (
-          <Star onRate={handleOnRate} key={i} />
+          <Star onRate={() => handleRating(i + 1)} key={i} />
         ))}
       </div>
       <p style={textStyle}>{rating || ""}</p>
