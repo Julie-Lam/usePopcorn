@@ -1,5 +1,5 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+const KEY = "3a4c3c1d";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -51,8 +51,36 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const query = "castaway";
+  useEffect(function () {
+    async function fetchMovies() {
+      try {
+        setIsLoading(true);
+        var result = await fetch(
+          `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+        );
+
+        if (!result.ok)
+          throw new Error("Something went wrong with fetching movies");
+
+        var data = await result.json();
+        if (data.Response === "False") throw new Error("Movie not found");
+
+        setMovies(data.Search);
+        setIsLoading(false);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchMovies();
+  }, []);
 
   return (
     <>
@@ -62,7 +90,9 @@ export default function App() {
       </NavBar>
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <ErrorMessage message={error} />}
         </Box>
         <Box>
           <WatchedSummary watched={watched} />
@@ -73,6 +103,18 @@ export default function App() {
   );
 }
 
+function Loader() {
+  return <p className="loader">Loading...</p>;
+}
+
+function ErrorMessage({ message }) {
+  return (
+    <p className="error">
+      <span>💀</span>
+      {message}
+    </p>
+  );
+}
 function NavBar({ children }) {
   return (
     <nav className="nav-bar">
