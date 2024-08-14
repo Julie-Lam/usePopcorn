@@ -28,7 +28,7 @@ export default function StarRating({
   className = "",
   messages = [],
   defaultRating = 0,
-  onSetRating,
+  onSetRating = function () {},
 }) {
   const [rating, setRating] = useState(defaultRating);
   const [hoverRating, setHoverRating] = useState(0);
