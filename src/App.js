@@ -74,16 +74,7 @@ export default function App() {
   }
 
   function handleAddWatched(movie) {
-    //If newWatchedMovie already on the list of watched movies, then don't add
-    // const isWatched = watched.map((m) => m.imdbID === movie.imdbID).length > 0
-    // const isWatched = watched.map((m) => m.imdbID).includes(movie.imdbID);
-
-    // if (isWatched) {
-    //   console.log("Same movie??");
-    //   console.log(watched);
-    // } else {
     setWatched((watched) => [...watched, movie]);
-    // }
   }
 
   return (
@@ -226,6 +217,10 @@ function MovieDetails({
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
 
+  const watchedMovieUserRating = watchedMoviesList.find(
+    (movie) => movie.imdbID === selectedMovieId
+  )?.userRating;
+
   const isWatched = watchedMoviesList
     .map((m) => m.imdbID)
     .includes(movie.imdbID);
@@ -301,7 +296,9 @@ function MovieDetails({
           <section>
             <div className="rating">
               {isWatched ? (
-                <p>You've rated this movie</p>
+                <p>
+                  You've rated this movie as {watchedMovieUserRating} stars!
+                </p>
               ) : (
                 <>
                   <StarRating
