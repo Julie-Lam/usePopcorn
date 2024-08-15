@@ -34,7 +34,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("castaway");
-  const [selectedMovieId, setSelectedMovieId] = useState("tt1499666");
+  const [selectedMovieId, setSelectedMovieId] = useState("");
 
   useEffect(
     function () {
@@ -277,6 +277,13 @@ function MovieDetails({
       getMovieDetails();
     },
     [selectedMovieId]
+  );
+
+  useEffect(
+    function () {
+      document.title = `Movie | ${title}`;
+    },
+    [title]
   );
 
   return (
