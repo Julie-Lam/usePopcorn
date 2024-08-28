@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 const KEY = "3a4c3c1d";
 
@@ -156,6 +156,26 @@ function Logo() {
   );
 }
 function Search({ query, handleOnChangeQuery }) {
+  const inputEl = useRef(null);
+
+  useEffect(
+    function () {
+      function callbackFn(e) {
+        if (document.activeElement === inputEl.current) return;
+
+        if (e.code === "Enter") {
+          inputEl.current.focus();
+          handleOnChangeQuery("");
+        }
+      }
+
+      document.addEventListener("keydown", callbackFn);
+
+      return () => document.addEventListener("keydown", callbackFn);
+    },
+    [handleOnChangeQuery]
+  );
+
   return (
     <input
       className="search"
@@ -163,6 +183,7 @@ function Search({ query, handleOnChangeQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => handleOnChangeQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }
